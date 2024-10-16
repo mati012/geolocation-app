@@ -1,20 +1,49 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
+    <ion-title>Home</ion-title>
+    <ion-button slot="end" (click)="logout()">
+      <ion-icon name="log-out"></ion-icon>
+      LOGOUT
+    </ion-button>
   </ion-toolbar>
 </ion-header>
+<ion-content class="home-content">
+  <div class="container">
+    
+    <ion-card>
+      <ion-card-header>
+        <h2>Bienvenido, {{ userData.name }}</h2>
+        <ion-card-title>Ubicación Actual</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <p>Latitud: {{ currentPosition.latitude }}</p>
+        <p>Longitud: {{ currentPosition.longitude }}</p>
+        <p>Dentro de la geocerca: 
+          <ion-badge [color]="isInsideGeofence ? 'success' : 'danger'">
+            {{ isInsideGeofence ? 'Si' : 'No' }}
+          </ion-badge>
+        </p>
+      </ion-card-content>
+    </ion-card>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
+    <div id="map" class="map-container"></div>
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+    <ion-button expand="block" (click)="showLocationDetails()">
+      <ion-icon name="information-circle-outline" slot="start"></ion-icon>
+      Ver detalles de la ubicación
+    </ion-button>
+
+    <ion-card *ngIf="showDetails && locationDetails" class="location-details">
+      <ion-card-header>
+        <ion-card-title>Detalles de la Ubicación</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <p><strong>Descripción:</strong> {{ locationDetails.descripcion }}</p>
+        <p><strong>Dirección:</strong> {{ locationDetails.direccion }}</p>
+        <p><strong>Latitud:</strong> {{ locationDetails.latitud }}</p>
+        <p><strong>Longitud:</strong> {{ locationDetails.longitud }}</p>
+        <p><strong>Código Externo:</strong> {{ locationDetails.codigo_externo }}</p>
+      </ion-card-content>
+    </ion-card>
   </div>
 </ion-content>
