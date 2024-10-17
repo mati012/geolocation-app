@@ -23,6 +23,9 @@
             {{ isInsideGeofence ? 'Si' : 'No' }}
           </ion-badge>
         </p>
+        <p *ngIf="distanceToGeofence !== null">
+          Distancia al borde de la geocerca: {{ distanceToGeofence.toFixed(2) }} metros
+        </p>
       </ion-card-content>
     </ion-card>
 

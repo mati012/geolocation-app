@@ -1,5 +1,5 @@
 /* Common styles for both pages */
-.page-content {
+.home-content {
   --background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   display: flex;
   justify-content: center;
@@ -8,6 +8,7 @@
 }
 
 .content-container {
+  --background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   width: 90%;
   max-width: 400px;
   margin: 0 auto;
@@ -19,13 +20,10 @@
  
 }
 
-.card-container {
-  width: 90%;
-  max-width: 400px;
-  background-color: rgba(255, 255, 255, 0.9);
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  padding: 2rem;
+ion-card {
+
+  background-color: white;
+  
 }
 
 h1 {
@@ -34,7 +32,9 @@ h1 {
   margin-bottom: 1rem;
   text-align: center;
 }
-
+h2{
+  color:black;
+}
 ion-item {
   --background: transparent;
   --border-color: #ccc;
@@ -83,8 +83,9 @@ ion-header ion-toolbar {
   --color: white;
 }
 
-ion-title {
+ion-card-title {
   font-size: 1.2rem;
+  color:black;
 }
 
 ion-button[slot="end"] {

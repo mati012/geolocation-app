@@ -19,31 +19,33 @@
 }
 
 h1 {
-  color: #333;
+  color:#000;
   font-size: 2rem;
   margin-bottom: 0.5rem;
 }
 
 p {
-  color: #666;
+  color:  #000;
   margin-bottom: 2rem;
 }
 
 ion-item {
   --background: transparent;
-  --border-color: #ccc;
+  --border-color: #000;
   --border-radius: 5px;
   --padding-start: 0;
   margin-bottom: 1rem;
+  --color: black;
 }
 
 ion-label {
-  --color: #555;
+  transition: transform 0.2s ease, font-size 0.2s ease;
+  color: black; /* Default label color */
 }
-
 ion-input {
   --padding-start: 1rem;
   --padding-end: 1rem;
+  --color: black;
 }
 
 .login-button {
@@ -58,3 +60,4 @@ ion-input {
   margin-top: 1rem;
   font-size: 0.9rem;
 }
+
