@@ -103,7 +103,7 @@ export class HomePage implements OnInit, AfterViewInit {
       latitude: Number(coordinates.coords.latitude.toFixed(4)),
       longitude: Number(coordinates.coords.longitude.toFixed(4)),
     };
-
+ 
     this.checkGeofence(); 
 
     if (this.map) {
