@@ -5,6 +5,7 @@ import { AuthService } from '../auth.service';
 import * as L from 'leaflet';
 import { Router } from '@angular/router';
 import { Capacitor } from '@capacitor/core';
+
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -22,6 +23,9 @@ export class HomePage implements OnInit, AfterViewInit {
   showDetails: boolean = false;
   distanceToGeofence: number | null = null;
   positionWatchId: string | null = null;
+  currentPositionMarker: L.Marker | null = null;
+  locationMarker: L.Marker | null = null;
+
   constructor(
     private locationService: LocationService,
     private authService: AuthService,
@@ -55,6 +59,7 @@ export class HomePage implements OnInit, AfterViewInit {
 
     this.addMarkers();
   }
+
   async getCurrentPosition() {
     try {
       if (Capacitor.getPlatform() === 'web') {
@@ -103,13 +108,16 @@ export class HomePage implements OnInit, AfterViewInit {
       latitude: Number(coordinates.coords.latitude.toFixed(4)),
       longitude: Number(coordinates.coords.longitude.toFixed(4)),
     };
- 
-    this.checkGeofence(); 
+
+    this.checkGeofence();
 
     if (this.map) {
       this.addMarkers();
+      // Optionally pan to the new position
+      this.map.panTo([this.currentPosition.latitude, this.currentPosition.longitude]);
     }
   }
+
   getLocationDetails() {
     this.locationService.getLocations(['1791']).subscribe(
       (response) => {
@@ -143,26 +151,33 @@ export class HomePage implements OnInit, AfterViewInit {
       shadowSize: [41, 41],
     });
 
-    if (this.map && this.currentPosition.latitude && this.locationDetails) {
-      L.marker(
-        [this.currentPosition.latitude, this.currentPosition.longitude],
-        { icon: customIcon }
-      )
-        .addTo(this.map)
-        .bindPopup('Tu ubicación')
-        .openPopup();
+    if (this.map && this.currentPosition.latitude) {
+      // Update current position marker
+      if (this.currentPositionMarker) {
+        // If marker exists, just update its position
+        this.currentPositionMarker.setLatLng([
+          this.currentPosition.latitude,
+          this.currentPosition.longitude
+        ]);
+      } else {
+        // If marker doesn't exist, create it
+        this.currentPositionMarker = L.marker(
+          [this.currentPosition.latitude, this.currentPosition.longitude],
+          { icon: customIcon }
+        )
+          .addTo(this.map)
+          .bindPopup('Tu ubicación');
+      }
 
-      if (this.locationDetails.latitud && this.locationDetails.longitud) {
-        L.marker(
+      // Handle location marker (only create once)
+      if (this.locationDetails?.latitud && this.locationDetails?.longitud && !this.locationMarker) {
+        this.locationMarker = L.marker(
           [this.locationDetails.latitud, this.locationDetails.longitud],
           { icon: customIcon }
         )
           .addTo(this.map)
-          .bindPopup(this.locationDetails.descripcion)
-          .openPopup();
+          .bindPopup(this.locationDetails.descripcion);
         console.log('Marker added for API location:', this.locationDetails);
-      } else {
-        console.log('Location details missing latitude or longitude.');
       }
     } else {
       console.log('No se obtuvo la ubicacion');
@@ -209,13 +224,22 @@ export class HomePage implements OnInit, AfterViewInit {
     this.showDetails = !this.showDetails;
     console.log('Location Details:', this.locationDetails);
   }
+
   logout() {
     this.authService.logout();
     this.router.navigate(['/login']);
   }
+
   ngOnDestroy() {
     if (this.positionWatchId !== null) {
       Geolocation.clearWatch({ id: this.positionWatchId });
+    }
+    // Clean up markers
+    if (this.currentPositionMarker) {
+      this.currentPositionMarker.remove();
+    }
+    if (this.locationMarker) {
+      this.locationMarker.remove();
     }
   }
 }
